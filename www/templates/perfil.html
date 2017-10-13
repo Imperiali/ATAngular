@@ -1,5 +1,21 @@
 <ion-view view-title="Perfil">
   <ion-content>
     <h1>Perfil</h1>
+    <div class="list">
+      <label class="item item-input">
+        <a class="item item-thumbnail-left" href="#">
+          <img  src="{{user.photo}}"></img>
+        </a>
+      </label>
+      <label class="item item-input">
+        <input type="text" placeholder="Nome" ng-model="user.username" />
+      </label>
+      <label class="item item-input">
+        <input type="text" placeholder="Email" ng-model="user.email" />
+      </label>
+      <label>
+        Criado em {{user.createdAt | date : 'dd/MM/yyyy'}}
+      </label>
+    </div>
   </ion-content>
 </ion-view>

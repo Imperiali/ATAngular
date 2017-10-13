@@ -1,100 +1,163 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['ngMap'])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, Auth, $rootScope) {
 
+  var checaLogin = localStorage.getItem("user");
+  if (checaLogin && checaLogin.length > 0){
+    $rootScope.estaLogado = true;
+  };
   $scope.loginData = {};
-
-  // Create the login modal that we will use later
+  
   $ionicModal.fromTemplateUrl('templates/login.html', {
     scope: $scope
   }).then(function(modal) {
     $scope.modal = modal;
   });
-
-  // Triggered in the login modal to close it
+  
   $scope.closeLogin = function() {
     $scope.modal.hide();
   };
-
-  // Open the login modal
+  
   $scope.login = function() {
     $scope.modal.show();
   };
-
-  // Perform the login action when the user submits the login form
+  
   $scope.doLogin = function() {
+    Auth.verificaLogin($scope.loginData).then(ret => {
+      console.log("voltei com:");
+      console.log(ret);
+      $rootScope.estaLogado = true;
+      Auth.salvaLocalStorage("user",JSON.stringify(ret.data));
+    });
     console.log('Doing login', $scope.loginData);
-
-    // Simulate a login delay. Remove this and replace with your login
-    // code if using a login system
     $timeout(function() {
       $scope.closeLogin();
     }, 1000);
   };
-})
-
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
-})
-
-.controller('PlaylistCtrl', function($scope, $stateParams) {
-})
-
-.controller('CachorroCtrl', function($scope){
-  $scope.titulo = "Aqui tem detalhes"
   
-  $scope.animais = [{
-    "id":"1",
-    "nome":"Thor",
-    "descricao":"bla bla bla bla bla bla bla blabla bla bla blabla bla bla blabla bla bla blabla bla bla bla",
-    "contato":"123456789",
-    "imagem":"http://lorempixel.com/300/150/animals/55"
-  }]
+  $scope.logout = function () {
+    $rootScope.estaLogado = false;
+    localStorage.removeItem("user");
+  };
+})
+
+.controller('CachorroCtrl', function($scope, $stateParams, AnimAPI, $state){
   
+  var idAnimal = $stateParams.id;
+  
+  console.log(idAnimal);
+  AnimAPI.query({id: idAnimal}, function(anim){
+    $scope.animal = anim.data;
+    $scope.titulo = anim.data.nome;
+    console.log(anim);
+  })
 })
 
-.controller('CachorrosCtrl', function($scope){
-  $scope.animais = [{
-    "id":"1",
-    "nome":"Thor",
-    "descricao":"bla bla bla bla bla bla bla blabla bla bla blabla bla bla blabla bla bla blabla bla bla bla",
-    "contato":"123456789",
-    "imagem":"http://lorempixel.com/300/150/animals/55"
-  },
-  {
-    "id":"2",
-    "nome":"Loki",
-    "descricao":"bla bla bla bla bla bla bla blabla bla bla blabla bla bla blabla bla bla blabla bla bla bla",
-    "contato":"123456789",
-    "imagem":"http://lorempixel.com/300/150/animals/55"
-  },
-  {
-    "id":"3",
-    "nome":"Odin",
-    "descricao":"bla bla bla bla bla bla bla blabla bla bla blabla bla bla blabla bla bla blabla bla bla bla",
-    "contato":"123456789",
-    "imagem":"http://lorempixel.com/300/150/animals/55"
-  },
-  {
-    "id":"4",
-    "nome":"Feir",
-    "descricao":"bla bla bla bla bla bla bla blabla bla bla blabla bla bla blabla bla bla blabla bla bla bla",
-    "contato":"123456789",
-    "imagem":"http://lorempixel.com/300/150/animals/55"
-  }];
+.controller('CachorrosCtrl', function($scope, AnimAPI){
+  
+  $scope.titulo = "Cachorros";
+  
+  $scope.tipo = "cachorro";
+  
+   AnimAPI.query(function (anim){
+    $scope.animais = anim.data;
+  });
 })
 
-.controller('GatosCtrl', function($scope){
-  $scope.animais = [];
+.controller('GatosCtrl', function($scope, AnimAPI){
+  $scope.titulo = "Busca por Gato"
+  
+   $scope.tipo = "gato";
+  
+  AnimAPI.query(function (anim){
+    $scope.animais = anim.data;
+  });
+})
+
+.controller('GatoCtrl', function($scope, AnimAPI, $state, $stateParams){
+  
+  var idAnimal = $stateParams.id;
+  
+  console.log(idAnimal);
+  AnimAPI.query({id: idAnimal}, function(anim){
+    $scope.animal = anim.data;
+    $scope.titulo = anim.data.nome;
+    console.log(anim);
+  })
+})
+
+.controller('OutrosCtrl', function($scope, AnimAPI){
+  $scope.titulo = "Busca por outro animais"
+  
+   $scope.tipo = "outro";
+  
+  AnimAPI.query(function (anim){
+    $scope.animais = anim.data;
+  });
+})
+
+.controller('OutroCtrl', function($scope, AnimAPI, $state, $stateParams){
+  
+  var idAnimal = $stateParams.id;
+  
+  console.log(idAnimal);
+  AnimAPI.query({id: idAnimal}, function(anim){
+    $scope.animal = anim.data;
+    $scope.titulo = anim.data.nome;
+    console.log(anim);
+  })
 })
 
 .controller('PerfilCtrl', function($scope){
+  var usertemp = localStorage.getItem("user");
+  console.log(usertemp);
+  if(usertemp) $scope.user = JSON.parse(usertemp).user;
+})
+
+.controller('CadAnimalCtrl', function($scope, AnimAPI){
+  // $scope.endereco = [];
   
+  $scope.latitude = "";
+  
+  $scope.longitude = "";
+  
+  $scope.geocoder = new google.maps.Geocoder();
+  
+  // $scope.map = new google.maps.Map(divDoMapa, opcoes);
+  
+  function converteEndereco(endereco) {
+    $scope.geocoder.geocode( { 'address': endereco}, function(resultado, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        
+          $scope.latitude = resultado[0].geometry.location.k
+          $scope.longitude = resultado[0].geometry.location.D	
+          console.log($scope.latitude);
+          console.log(endereco);
+      
+      } else {
+        alert('Erro ao converter endereço: ' + status);
+      }
+    });
+  }
+  
+  $scope.animal = new AnimAPI();
+  $scope.cadastra = function(){
+    $scope.endereco = endereco.value
+    converteEndereco($scope.endereco);
+    AnimAPI.save($scope.animal, function(x) {
+      console.log(x);
+      console.log($scope.endereco.value);
+      console.log($scope.animal.latitude);
+    });
+  };
+})
+
+.controller('CadUsuarioCtrl', function($scope, CadAPI){
+  $scope.user = new CadAPI();
+  $scope.cadastro = function(){
+    CadAPI.save($scope.user, function(x) {
+      console.log(x);
+      console.log($scope.user);
+    })
+  }
 });

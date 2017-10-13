@@ -1,12 +1,12 @@
 <ion-view view-title="Lista Animais">
   <ion-content>
     <h1>{{titulo}}</h1>
-    <div class="list" ng-repeat="animal in animais">
-        <a class="item item-thumbnail-left" href="#/app/cachorro/{{animal.id}}">
-          <img src="{{animal.imagem}}">
+    <div class="list" ng-repeat="animal in animais | filter : tipo ">
+        <a class="item item-thumbnail-left" href="#/app/gato/{{animal.id}}">
+          <img src="{{animal.foto}}">
           <h2>{{animal.nome}}</h2>
           <p>{{animal.descricao}}</p>
-          <p>{{animal.contato}}</p>
+          <p ng-if="estaLogado">{{animal.contato}}</p>
         </a>
     </div>
   </ion-content>

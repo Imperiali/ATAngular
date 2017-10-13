@@ -1,10 +1,4 @@
-// Ionic Starter App
-
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', "ngResource"])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -43,7 +37,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
   })
   
   .state('app.cachorro', {
-    url: '/cachorros/:id',
+    url: '/cachorro/:id',
     views: {
       'menuContent': {
         templateUrl: 'templates/animal.html',
@@ -61,15 +55,64 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         }
       }
     })
-    .state('app.perfil', {
-      url: '/playlists',
+    
+  .state('app.gato', {
+    url: '/gato/:id',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/animal.html',
+        controller: 'GatoCtrl'
+      }
+    }
+  })
+  
+  .state('app.outros', {
+      url: '/outros',
       views: {
         'menuContent': {
-          templateUrl: 'templates/perfil.html',
-          controller: 'PerfilCtrl'
+          templateUrl: 'templates/listaanimais.html',
+          controller: 'OutrosCtrl'
         }
       }
     })
+    
+  .state('app.outro', {
+    url: '/outro/:id',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/animal.html',
+        controller: 'OutroCtrl'
+      }
+    }
+  })
+  
+  .state('app.perfil', {
+    url: '/perfil',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/perfil.html',
+        controller: 'PerfilCtrl'
+      }
+    }
+  })
+  .state('app.cadanimal', {
+    url: '/cadanimal',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/cadanimal.html',
+        controller: 'CadAnimalCtrl'
+      }
+    }
+  })
+  .state('app.cadastro', {
+    url: '/cadastro',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/cadastro.html',
+        controller: 'CadUsuarioCtrl'
+      }
+    }
+  })
 
 
   // if none of the above states are matched, use this as the fallback

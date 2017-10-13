@@ -2,11 +2,15 @@
   <ion-content>
     <h1>{{titulo}}</h1>
     <div class="list">
-        <a class="item item-thumbnail-left" href="#">
-          <img src="{{animal.nome}}">
+        <a class="item item-thumbnail-left" href="">
+          <img src="{{animal.foto}}">
           <h2>{{animal.nome}}</h2>
           <p>{{animal.descricao}}</p>
+          <p ng-if="estaLogado">{{animal.contato}}</p>
         </a>
+        <map name="" center="{{animal.latitude}},{{animal.longitude}}" zoom="15" ng-if="estaLogado">
+           <marker position=“{{animal.latitude}},{{animal.longitude}}” />
+        </map>
     </div>
   </ion-content>
 </ion-view>
