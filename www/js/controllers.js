@@ -1,4 +1,4 @@
-angular.module('starter.controllers', ['ngMap'])
+angular.module('starter.controllers', ['ngMap','toaster', 'ngAnimate'])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, Auth, $rootScope) {
 
@@ -114,8 +114,21 @@ angular.module('starter.controllers', ['ngMap'])
   if(usertemp) $scope.user = JSON.parse(usertemp).user;
 })
 
-.controller('CadAnimalCtrl', function($scope, AnimAPI){
+.controller('CadAnimalCtrl', function($scope, AnimAPI, $state, toaster){
   // $scope.endereco = [];
+  // Toaste!!
+  $scope.pop = function(){
+	        toaster.pop({
+                type: 'success',
+                title: 'Cadastrado',
+                body: 'com sucesso!!',
+                timeout: 3000
+            });
+	        
+	    };
+  
+  
+  // FimToaste!!
   
   $scope.latitude = "";
   
@@ -135,7 +148,7 @@ angular.module('starter.controllers', ['ngMap'])
           console.log(endereco);
       
       } else {
-        alert('Erro ao converter endereço: ' + status);
+        //alert('Erro ao converter endereço: ' + status);
       }
     });
   }
@@ -148,16 +161,40 @@ angular.module('starter.controllers', ['ngMap'])
       console.log(x);
       console.log($scope.endereco.value);
       console.log($scope.animal.latitude);
+      $scope.pop();
     });
   };
 })
 
-.controller('CadUsuarioCtrl', function($scope, CadAPI){
+.controller('CadUsuarioCtrl', function($scope, CadAPI, toaster){
   $scope.user = new CadAPI();
+  
+  // Toaste!!
+  $scope.pop1 = function(){
+	        toaster.pop({
+                type: 'success',
+                title: 'Cadastrado',
+                body: 'com sucesso!!',
+                timeout: 3000
+            });
+	        
+	    };
+  
+  
+  // FimToaste!!
+  
   $scope.cadastro = function(){
     CadAPI.save($scope.user, function(x) {
       console.log(x);
       console.log($scope.user);
     })
+    $scope.pop1();
   }
+})
+
+.controller('HomeCtrl', function($scope, AnimAPI){
+
+  AnimAPI.query(function (anim){
+    $scope.animais = anim.data;
+  });
 });
